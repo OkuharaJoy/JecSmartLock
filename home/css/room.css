@@ -1,0 +1,654 @@
+@charset "UTF-8";
+@media screen and (min-width: 481px) {
+  .room-practice.open {
+    background-color: green; /* 開放中の色 */
+}
+
+
+.room-practice.closed {
+    background-color: red; /* 施錠中の色 */
+}
+
+.room-practice.default {
+    background-color: gray; /* その他（不明）の色 */
+}
+
+  header {
+    background-color: #95E1CF;
+    padding: 40px 0;
+    text-align: center;
+    border-radius: 20px;
+    
+  }
+
+  body {
+    font-family: Arial, sans-serif;
+    background-color: #ffffff;
+    margin: 20px;
+  }
+
+  h1 {
+    margin: 0;
+    color: #3F3F3F;
+    font-family: serif;
+    font-size: 60px;
+  }
+
+  .name{
+    font-size: 25px;
+  }
+
+  .menu-icon{
+    width: 0;
+    height: 0;
+
+  }
+
+  .sidebar {
+    position: absolute;
+    left: -15%;
+    width: 10%;
+    height: calc(100% - 1px);
+    background-color: #333;
+    color: white;
+    transition: left 0.9s ease;
+    padding-top: 10px;
+    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.5);
+    border-top-right-radius: 15px;
+    border-bottom-right-radius: 15px;
+}
+
+
+.sidebar.open {
+    left: 0; /* サイドバーを表示するために左の位置を変更 */
+}
+
+.sidebar ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+.sidebar ul li {
+    padding: 20px;
+    text-align: center;
+    font-size: 20px;
+}
+
+.sidebar ul li a {
+    color: white;
+    text-decoration: none;
+    display: block;
+}
+
+.sidebar ul li a:hover {
+    background-color: #575757;
+}
+
+.sidebar ul li a img.icon {
+    width: 20px; /* アイコンの幅を設定 */
+    height: 20px; /* アイコンの高さを設定 */
+    margin-right: 10px; /* アイコンとテキストの間にスペースを作る */
+}
+
+.content {
+    width: 100%; /* 初期状態ではコンテンツ全体 */
+    margin-left: 0; /* サイドバーが開いていないとき */
+    transition: margin-left 0.9s ease; /* サイドバー開閉のアニメーション */
+}
+
+.sidebar.open + .content {
+    width: calc(100% - 250px); /* サイドバーが開いたときの幅 */
+    margin-left: 250px; /* サイドバーの幅だけ右にずらす */
+}
+
+
+  .container {
+    width: auto;
+    border: 1px solid #ddd;
+    background-color: #FCF6F6;
+    border-radius: 10px;
+    padding: 25px;
+  }
+
+  .header {
+    text-align: center;
+    font-size: 400%;  
+    width: auto;
+    margin-bottom: 10px;
+  }
+    /* 横並びにするためのCSS */
+    .toggle-container, .status-explanation {
+      display: flex;
+      align-items: center; /* 縦位置を中央に */
+      justify-content: flex-start; /* 横に並べる */
+      gap: 20px; /* 各要素間に隙間を設ける */
+  }
+
+  /* 説明部分のリストを横並びに */
+  .status-explanation ul {
+      display: flex;
+      flex-wrap: wrap; /* アイテムが多い場合に折り返しを可能にする */
+      gap: 20px; /* リストアイテムの間に隙間 */
+      list-style: none; /* デフォルトのリストスタイルを削除 */
+      padding: 0;
+  }
+
+  .status-explanation li {
+      display: flex;
+      align-items: center; /* テキストと色が縦に中央揃えになるように */
+  }
+
+  .status-explanation li span {
+      margin-right: 8px; /* 色の丸とテキストの間に隙間を設ける */
+  }
+  /* トグルスイッチのスタイル */
+
+  .toggle-switch {
+    position: relative;
+    display: inline-block;
+    width: 60px;
+    height: 34px;
+  }
+  .toggle-switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+  }
+  .slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #ccc;
+    transition: 0.4s;
+    border-radius: 34px;
+  }
+  .slider:before {
+    position: absolute;
+    content: "";
+    height: 26px;
+    width: 26px;
+    border-radius: 50%;
+    left: 4px;
+    bottom: 4px;
+    background-color: white;
+    transition: 0.4s;
+  }
+  input:checked + .slider {
+    background-color: #007BFF;
+  }
+  input:checked + .slider:before {
+    transform: translateX(26px);
+  }
+  
+  .building-section {
+    margin-bottom: 15px;
+  }
+
+  .building-toggle {
+    cursor: pointer;
+    color: #333;
+    font-weight: bold;
+    font-size: 30px;
+    background: none;
+    border: none;
+    width: 100%;
+    text-align: left;
+    padding: 5px;
+    border-bottom: 1px dotted #000; /* 点線を追加 */
+    margin-bottom: 10px; /* 下に少し余白を追加 */
+  }
+
+  .rooms {
+    display: none; /* 初期状態では非表示 */
+  }
+
+  .image-and-rooms {
+    display: flex; /* 画像と部屋番号を横並びにする */
+    align-items: flex-start; /* 画像とボタンを上揃えにする */
+    width: 100%;        /* 親要素に合わせて画像の幅を100%に */
+    height: 200px;      /* 高さを固定 */
+    object-fit: cover;  /* 画像の縦横比を保ちながら枠に合わせて切り取る */
+  }
+
+  .image-and-rooms img {
+    max-width: 120%; /* 画像の幅を親要素に合わせる */
+    height: 95%; /* 高さは自動調整 */
+    margin-right: 20px; /* 画像と部屋番号の間に余白を追加 */
+  }
+  
+  .rooms-buttons {
+    display: flex; /* 横並びにする */
+    flex-wrap: wrap; /* 画面幅に応じて折り返しを許可 */
+    gap: 20px; /* ボタン同士の間隔 */
+  }
+
+  .room-practice {
+    /* display: flex;
+    justify-content: center;
+    align-items: center; */
+    width: 120px;
+    height: 120px;
+    background-color: #ffffff;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    font-size: 1.5em;
+    font-weight: bold;
+    color: #333;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  
+  }
+
+  .room-practice:hover {
+      transform: scale(1.05);
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+      border-color: #999;
+  }
+  .Battery {
+    justify-content: center;
+    display: flex;
+    font-size: 0.5em; /* 小さい文字サイズ */
+    color: #555; /* やや薄い色 */
+    margin-top: 7px; /* 部屋番号との間に余白 */
+    margin-bottom: 0px;
+    font-weight: normal; /* 通常の太さ */
+    text-align: center; /* テキストを中央揃え */
+  }
+
+  .update-time {
+    justify-content: center;
+    display: flex;
+    font-size: 0.5em; /* 小さい文字サイズ */
+    color: #555; /* やや薄い色 */
+    margin-top: 7px; /* 部屋番号との間に余白 */
+    margin-bottom: 0px;
+    font-weight: normal; /* 通常の太さ */
+    text-align: center; /* テキストを中央揃え */
+  }
+
+
+/* ログイン失敗メッセージ全体のスタイル */
+.login-failed {
+  text-align: center;
+  background-color: #ffffff;
+  padding: 30px 20px;
+  border-radius: 15px;
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+  width: 90%; /* スマホ画面対応 */
+  max-width: 400px; /* PC画面での最大幅 */
+  margin: 20px auto;
+  animation: fadeIn 0.5s ease-out; /* フェードインアニメーション */
+}
+
+/* アニメーション効果 */
+@keyframes fadeIn {
+  from {
+      opacity: 0;
+      transform: translateY(-15px);
+  }
+  to {
+      opacity: 1;
+      transform: translateY(0);
+  }
+}
+
+/* 見出しのスタイル */
+.login-failed h2 {
+  color: #e74c3c; /* 鮮やかな赤 */
+  font-size: 2rem;
+  margin-bottom: 20px;
+  font-weight: bold;
+}
+
+/* エラーメッセージのスタイル */
+.error-message {
+  color: #e74c3c;
+  background-color: #ffeaea;
+  padding: 15px;
+  border-radius: 10px;
+  margin-bottom: 20px;
+  text-align: left;
+  font-size: 1rem;
+  border: 1px solid #ffcccc;
+  animation: shake 0.4s ease-out; /* 揺れるアニメーション */
+}
+
+/* 揺れるアニメーション */
+@keyframes shake {
+  0%, 100% {
+      transform: translateX(0);
+  }
+  25% {
+      transform: translateX(-5px);
+  }
+  50% {
+      transform: translateX(5px);
+  }
+  75% {
+      transform: translateX(-5px);
+  }
+}
+
+/* ログイン画面へのリンクボタン */
+.back-to-login {
+  display: inline-block;
+  padding: 12px 25px;
+  background: linear-gradient(90deg, #3498db, #2980b9); /* グラデーション */
+  color: white;
+  text-decoration: none;
+  border-radius: 8px;
+  font-size: 1.1rem;
+  font-weight: bold;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.back-to-login:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+}
+}
+
+@media screen and (max-width: 480px) {
+  header {
+    background-color: #95E1CF;
+    padding: 10% 0;
+    margin: 0;
+    text-align: center;
+    border-radius: 20px;
+  }
+
+  body {
+    font-family: Arial, sans-serif;
+    background-color: white;
+  }
+
+  h1 {
+    margin: 0;
+    color: #3F3F3F;
+    font-family: serif;
+  }
+
+  /* メニューアイコン */
+  #menu-Icon{
+    cursor: pointer;
+  }
+  .menu-icon {
+    pointer-events: auto; /* タップ可能にする */
+    width: 40px;
+    height: 40px;
+    margin-left: 90%;
+    transition: opacity 0.9s ease; /* スムーズなアニメーション */
+  }
+  .sidebar {
+    position: fixed;
+    left: -250px; /* 初期位置を画面外に */
+    top: 0;
+    max-width: 100%; /* 画面全体の幅 */
+    height: 100%;
+    background-color: #333;
+    color: white;
+    transition: left 0.5s ease; /* スライドインのアニメーション */
+    padding-top: 90px;
+    align-items: center; /* 中央寄せ */
+    justify-content: space-between; /* ボタン間を均等に配置 */
+    z-index: 1000; /* サイドバーが他のコンテンツより前面に表示される */
+  }
+  .sidebar.open {
+    left: 0; /* サイドバーを表示するために左の位置を変更 */
+    width: 100%;
+    overflow: hidden; /* スクロールを無効化 */
+    z-index: 1000; /* サイドバーが他のコンテンツより前面に表示される */
+  }
+  .close-button {
+    display: inline-block;
+    width: 40px;  /* 幅 */
+    height: 40px; /* 高さ */   
+    background-color: #333; /* 背景色を暗い色に */
+    border-radius: 50%;  /* 円形にする */
+    border: 2px solid white; /* 白い枠線 */
+    position: relative;
+    justify-content: center;
+    align-items: center;  /* 中央に配置 */
+}
+
+.close-button::before {
+  content: '\2190'; /* Unicode for leftwards arrow (←) */
+    font-size: 18px;
+    color: white; /* ×の色を白に設定 */
+    width: 30px;  /* 幅 */
+}
+.sidebar.closed {
+  transform: translateX(-100%);
+}
+
+  
+  .sidebar ul {
+    list-style-type: none;
+    padding: 0;
+    margin: 0; /* マージンをリセット */
+  }
+
+  .sidebar ul li {
+    padding: 25px 0px;
+    text-align: center;
+    width: 100%; /* リスト項目の幅を100%に */
+  }
+
+  .sidebar ul li a {
+    color: white;
+    text-decoration: none;
+    display: block;
+  }
+
+  .sidebar ul li a:hover {
+    background-color: #575757;
+  }
+
+  .sidebar ul li a img.icon {
+    width: 20px;
+    height: 20px;
+    margin-right: 10px;
+  }
+
+  /* メインコンテンツ */
+  .content {
+    transition: margin-left 0.5s ease;
+    z-index: 500; /* 部屋のコンテンツがサイドバーより背面に表示される */
+  }
+
+
+
+  .container {
+    width: auto;
+    border: 1px solid #ddd;
+    background-color: #FCF6F6;
+    padding: 20px;
+    border-radius: 10px;
+  }
+
+  .header {
+    text-align: center;
+    font-size: 40px;
+    width: auto;
+    margin-bottom: 10px;
+  }
+/* 横並び配置 */
+.status-explanation {
+  display: flex;
+  align-items: flex-start; /* 縦位置を整える */
+  gap: 20px; /* pタグとulタグの間の隙間 */
+}
+
+/* 説明部分のリスト */
+.status-explanation ul {
+  display: flex;
+  flex-wrap: wrap; /* アイテムが多い場合に折り返し可能に */
+  gap: 10px; /* リストアイテム間の隙間 */
+  list-style: none; /* デフォルトのリストスタイルを削除 */
+  padding: 0;
+}
+
+.status-explanation li {
+  display: flex;
+  align-items: center; /* アイテムの縦位置を中央揃え */
+}
+
+.status-explanation li span {
+  margin-right: 5px; /* 色とテキストの間の隙間 */
+}
+
+.toggle-container{
+  display: none; /* 要素を非表示にする */
+}
+  .building-section {
+    margin-bottom: 20px;
+  }
+
+  .building-toggle {
+    cursor: pointer;
+    color: #333;
+    font-weight: bold;
+    background: none;
+    border: none;
+    width: 100%;
+    text-align: left;
+    padding: 5px;
+    font-size: 20px;
+    border-bottom: 1px dotted #000; /* 点線を追加 */
+    margin-bottom: 10px; /* 下に少し余白を追加 */
+  }
+
+  .rooms {
+    display: none; /* 初期状態では非表示 */
+    margin-top: 10px;
+  }
+
+  .image-and-rooms {
+    display: flex; /* 画像と部屋番号を横並びにする */
+    align-items: flex-start; /* 画像とボタンを上揃えにする */
+  }
+
+  .image-and-rooms img {
+    max-width: 25%; /* 画像の幅を親要素に合わせる */
+    height: 35%; /* 高さは自動調整 */
+  }
+
+  .rooms-buttons {
+    display: flex; /* 横並びにする */
+    flex-wrap: wrap; /* 画面幅に応じて折り返しを許可 */
+    justify-content: center; /* コンテンツを中央に配置 */
+    gap: 20px; /* ボタン同士の間隔 */
+  }
+
+
+  .room-practice {
+    display: flex;            /* フレックスレイアウトにする */
+    flex-direction: column;   /* 要素を縦方向に並べる */
+    justify-content: center;  /* 内容を縦中央に配置 */
+    align-items: center;      /* 横中央に配置 */
+    background-color: #ffffff;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    font-size: 1em;           /* 基本的なフォントサイズ */
+    font-weight: bold;
+    color: #333;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    position: relative;
+    padding: 10px;            /* 内部余白を追加 */
+    box-sizing: border-box;   /* paddingがwidthに含まれるように */
+    overflow: hidden;         /* コンテンツがボタンからはみ出さないように */
+    margin: 10px;             /* ボタン間に余白 */
+}
+
+.classroom {
+    font-size: 1.2em;         /* 部屋番号のサイズ */
+    color: #000;              /* 部屋番号の色 */
+    margin-top: 5px;          /* 上の要素との間隔 */
+    text-align: center;       /* 中央揃え */
+}
+
+.Battery {
+    font-size: 0.8em;         /* バッテリー残量のサイズ */
+    color: #555;              /* 薄い色 */
+    margin-top: 5px;          /* 上の要素との間隔 */
+    margin-bottom: 0px;       /* 下の要素との間隔 */
+    font-weight: normal;      /* 通常の太さ */
+    text-align: center;       /* 中央揃え */
+}
+
+.update-time {
+    font-size: 0.8em;         /* 更新時間のサイズ */
+    color: #555;              /* 薄い色 */
+    margin-top: 5px;          /* 上の要素との間隔 */
+    font-weight: normal;      /* 通常の太さ */
+    text-align: center;       /* 中央揃え */
+}
+
+    /* ログイン失敗メッセージ全体のスタイル */
+    .login-failed {
+      text-align: center;
+      background-color: #ffffff;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      width: 90%; /* 画面幅の90%を使用 */
+      margin: 20px auto;
+      animation: fadeIn 0.5s ease-out; /* フェードインアニメーション */
+  }
+
+  /* アニメーション効果 */
+  @keyframes fadeIn {
+      from {
+          opacity: 0;
+          transform: translateY(-10px);
+      }
+      to {
+          opacity: 1;
+          transform: translateY(0);
+      }
+  }
+
+  /* 見出しのスタイル */
+  .login-failed h2 {
+      color: #e74c3c; /* 鮮やかな赤 */
+      font-size: 1.6rem; /* スマホ向けに少し小さく */
+      margin-bottom: 15px;
+      font-weight: bold;
+  }
+
+  /* エラーメッセージのスタイル */
+  .error-message {
+      color: #e74c3c;
+      background-color: #ffeaea;
+      padding: 10px;
+      border-radius: 8px;
+      margin-bottom: 15px;
+      text-align: left;
+      font-size: 0.9rem; /* スマホ向けにフォントサイズ調整 */
+      border: 1px solid #ffcccc;
+  }
+
+  /* ログイン画面へのリンクボタン */
+  .back-to-login {
+      display: inline-block;
+      padding: 10px 20px;
+      background: linear-gradient(90deg, #3498db, #2980b9); /* グラデーション */
+      color: white;
+      text-decoration: none;
+      border-radius: 8px;
+      font-size: 0.9rem;
+      font-weight: bold;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+      transition: transform 0.3s, box-shadow 0.3s;
+      margin-top: 10px;
+  }
+
+  .back-to-login:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+  }
+}
