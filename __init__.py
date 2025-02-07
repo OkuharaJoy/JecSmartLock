@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
 #
+#  Random/__init__.py : PyCrypto random number generation
+#
 # ===================================================================
 # The contents of this file are dedicated to the public domain.  To
 # the extent that dedication to the public domain is not available,
@@ -18,77 +20,38 @@
 # SOFTWARE.
 # ===================================================================
 
-from Crypto.Util.asn1 import (DerSequence, DerInteger, DerBitString,
-                             DerObjectId, DerNull)
+__all__ = ['new', 'get_random_bytes']
+
+from os import urandom
+
+class _UrandomRNG(object):
+
+    def read(self, n):
+        """Return a random byte string of the desired size."""
+        return urandom(n)
+
+    def flush(self):
+        """Method provided for backward compatibility only."""
+        pass
+
+    def reinit(self):
+        """Method provided for backward compatibility only."""
+        pass
+
+    def close(self):
+        """Method provided for backward compatibility only."""
+        pass
+        
+
+def new(*args, **kwargs):
+    """Return a file-like object that outputs cryptographically random bytes."""
+    return _UrandomRNG()
 
 
-def _expand_subject_public_key_info(encoded):
-    """Parse a SubjectPublicKeyInfo structure.
-
-    It returns a triple with:
-        * OID (string)
-        * encoded public key (bytes)
-        * Algorithm parameters (bytes or None)
-    """
-
-    #
-    # SubjectPublicKeyInfo  ::=  SEQUENCE  {
-    #   algorithm         AlgorithmIdentifier,
-    #   subjectPublicKey  BIT STRING
-    # }
-    #
-    # AlgorithmIdentifier  ::=  SEQUENCE  {
-    #   algorithm   OBJECT IDENTIFIER,
-    #   parameters  ANY DEFINED BY algorithm OPTIONAL
-    # }
-    #
-
-    spki = DerSequence().decode(encoded, nr_elements=2)
-    algo = DerSequence().decode(spki[0], nr_elements=(1,2))
-    algo_oid = DerObjectId().decode(algo[0])
-    spk = DerBitString().decode(spki[1]).value
-
-    if len(algo) == 1:
-        algo_params = None
-    else:
-        try:
-            DerNull().decode(algo[1])
-            algo_params = None
-        except:
-            algo_params = algo[1]
-
-    return algo_oid.value, spk, algo_params
+def atfork():
+    pass
 
 
-def _create_subject_public_key_info(algo_oid, public_key, params):
+#: Function that returns a random byte string of the desired size.
+get_random_bytes = urandom
 
-    if params is None:
-        algorithm = DerSequence([DerObjectId(algo_oid)])
-    else:
-        algorithm = DerSequence([DerObjectId(algo_oid), params])
-
-    spki = DerSequence([algorithm,
-                        DerBitString(public_key)
-                        ])
-    return spki.encode()
-
-
-def _extract_subject_public_key_info(x509_certificate):
-    """Extract subjectPublicKeyInfo from a DER X.509 certificate."""
-
-    certificate = DerSequence().decode(x509_certificate, nr_elements=3)
-    tbs_certificate = DerSequence().decode(certificate[0],
-                                           nr_elements=range(6, 11))
-
-    index = 5
-    try:
-        tbs_certificate[0] + 1
-        # Version not present
-        version = 1
-    except TypeError:
-        version = DerInteger(explicit=0).decode(tbs_certificate[0]).value
-        if version not in (2, 3):
-            raise ValueError("Incorrect X.509 certificate version")
-        index = 6
-
-    return tbs_certificate[index]
