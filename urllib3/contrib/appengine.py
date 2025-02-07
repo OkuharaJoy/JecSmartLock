@@ -4,8 +4,8 @@ This module provides a pool manager that uses Google App Engine's
 
 Example usage::
 
-    from pip._vendor.urllib3 import PoolManager
-    from pip._vendor.urllib3.contrib.appengine import AppEngineManager, is_appengine_sandbox
+    from urllib3 import PoolManager
+    from urllib3.contrib.appengine import AppEngineManager, is_appengine_sandbox
 
     if is_appengine_sandbox():
         # AppEngineManager uses AppEngine's URLFetch API behind the scenes
@@ -224,7 +224,7 @@ class AppEngineManager(RequestMethods):
                 )
 
         # Check if we should retry the HTTP response.
-        has_retry_after = bool(http_response.getheader("Retry-After"))
+        has_retry_after = bool(http_response.headers.get("Retry-After"))
         if retries.is_retry(method, http_response.status, has_retry_after):
             retries = retries.increment(method, url, response=http_response, _pool=self)
             log.debug("Retry: %s", url)
