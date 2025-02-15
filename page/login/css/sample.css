@@ -1,0 +1,213 @@
+@import url('https://fonts.googleapis.com/css2?family=Josefin+Sans&display=swap');
+
+@media screen and (min-width: 481px) {
+
+  header {
+    background-color: #95E1CF;
+    padding: 40px 0;
+    text-align: center;
+    border-radius: 20px;
+    
+  }
+
+  body {
+    font-family: Arial, sans-serif;
+    background-color: #ffffff;
+    margin: 20px;
+  }
+
+  h1 {
+    margin: 0;
+    color: #3F3F3F;
+    font-family: serif;
+    font-size: 60px;
+  }
+
+  .container {
+    max-width: 90%;
+    margin: 50px 30%;
+    background-color: #FCF6F6;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    padding: 40px; /* 余白を少し減らして調整 */
+    border-radius: 8px;
+  }
+
+  h2 {
+    text-align: center;
+    color: #333333;
+    margin-bottom: 20px; /* h2の下にスペースを追加 */
+  }
+
+  form {
+    display: flex;
+    text-align: center;
+    flex-direction: column;
+    align-items: center; /* 中央寄せにする */
+
+  }
+
+  form label {
+    width: 100%;
+    margin-bottom: 5px;
+    color: #333333;
+    text-align: left;
+  }
+
+  form input {
+    width: 90%; /* フォーム要素の幅を調整 */
+    margin-bottom: 15px; /* 入力フィールドの間隔を調整 */
+    padding: 10px;
+    border: 1px solid #cccccc;
+    border-radius: 4px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  }
+
+  form a {
+    color: #b5d337;
+    text-align: right;
+    margin-bottom: 20px;
+    text-decoration: none;
+    width: 90%; /* リンクをフォーム幅に合わせる */
+  }
+
+  form a:hover {
+    text-decoration: underline;
+  }
+
+  form button {
+    width: 90%; /* ボタンの幅を調整 */
+    background-color: #b5d337;
+    color: white;
+    border: none;
+    padding: 10px;
+    border-radius: 4px;
+    cursor: pointer;
+    margin-top: 10px; /* ボタンの上にスペースを追加 */
+  }
+
+  form button:hover {
+    background-color: #9ebd28;
+  }
+
+  input[type="text"],
+  input[type="password"] {
+    width: 100%; /* 入力フィールドをフォーム内で広げる */
+    box-sizing: border-box;
+  }
+
+  /* Animation Background Styles */
+  .bg {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    position: relative;
+    overflow: hidden;
+    width: 100%;
+    color: #FCF6F6;
+    padding-top: 50px;
+  }
+}
+@media screen and (max-width: 480px) {
+
+  header {
+    background-color: #95E1CF;
+    padding: 10% 0;
+    text-align: center;
+    border-radius: 20px;
+  }
+
+  body {
+    font-family: Arial, sans-serif;
+    background-color: white;
+  }
+
+  h1 {
+    margin: 0;
+    color: #3F3F3F;
+    font-family: serif;
+  }
+  
+  .container {
+    max-width: 90%;
+    margin: 10% 10%;
+    background-color: #FCF6F6;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    padding: 10%; /* 余白を少し減らして調整 */
+    border-radius: 8px;
+  }
+
+  h2 {
+    text-align: center;
+    color: #333333;
+    margin-bottom: 20px; /* h2の下にスペースを追加 */
+  }
+
+  form {
+    display: flex;
+    text-align: center;
+    flex-direction: column;
+    align-items: center; /* 中央寄せにする */
+
+  }
+
+  form label {
+    width: 100%;
+    margin-bottom: 5px;
+    color: #333333;
+    text-align: left;
+  }
+
+  form input {
+    width: 90%; /* フォーム要素の幅を調整 */
+    margin-bottom: 15px; /* 入力フィールドの間隔を調整 */
+    padding: 10px;
+    border: 1px solid #cccccc;
+    border-radius: 4px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  }
+
+  form a {
+    color: #b5d337;
+    text-align: right;
+    margin-bottom: 20px;
+    text-decoration: none;
+    width: 90%; /* リンクをフォーム幅に合わせる */
+  }
+
+  form a:hover {
+    text-decoration: underline;
+  }
+
+  form button {
+    width: 90%; /* ボタンの幅を調整 */
+    background-color: #b5d337;
+    color: white;
+    border: none;
+    padding: 10px;
+    border-radius: 4px;
+    cursor: pointer;
+    margin-top: 10px; /* ボタンの上にスペースを追加 */
+  }
+
+  form button:hover {
+    background-color: #9ebd28;
+  }
+
+  input[type="text"],
+  input[type="password"] {
+    width: 100%; /* 入力フィールドをフォーム内で広げる */
+    box-sizing: border-box;
+  }
+
+  /* Animation Background Styles */
+  .bg {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    position: relative;
+    overflow: hidden;
+    width: 100%;
+    color: #FCF6F6;
+    padding-top: 0%;
+  }
+}

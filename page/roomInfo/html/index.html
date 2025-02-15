@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <title>Sesame_Control</title>
+    <script>
+        async function fetchStatus() {
+            try {
+                console.log(`classroomId: ${classroomId}`); // デバッグ用
+                const encodedId = encodeURIComponent(classroomId);
+                const response = await fetch(`Homestatus.php?id=${encodedId}&timestamp=${new Date().getTime()}`);
+                if (!response.ok) {
+                    throw new Error(`HTTPエラー: ${response.status}`);
+                }
+
+                const statusData = await response.json();
+                console.log('statusData:', statusData); // デバッグ用
+
+                const now = new Date();
+                document.getElementById("battery").innerText = `${statusData.battery}`;
+                document.getElementById("angle").innerText = `${statusData.angle}`;
+                document.getElementById("status").innerText = `${statusData.status}`;
+                document.getElementById("update-time").innerText = now.toLocaleString();
+            } catch (error) {
+                console.error(error.message);
+                document.getElementById("status").innerText = error.message;
+                document.getElementById("update-time").innerText = "";
+            }
+        }
+        
+        async function controlDoor(action) {
+            try {
+                const response = await fetch(`keyLogic.php?action=${action}`, {
+                    method: "GET",
+                });
+                const result = await response.json();
+
+                if (result.success) {
+                    // alert("操作成功: " + result.message);
+                    //fetchStatus(); // 解錠/施錠後にステータスを更新
+                } else {
+                    alert("操作失敗: " + result.error);
+                }
+
+                //fetchStatus();
+            } catch (error) {
+                alert("通信エラー: " + error.message);
+            }
+        }
+        
+        
+
+        async function fetchHistory() {
+            try {
+                const response = await fetch("history.php?timestamp=" + new Date().getTime());
+                if (!response.ok) {
+                    throw new Error(`HTTPエラー: ${response.status}`);
+                }
+
+                const result = await response.json();
+
+                const historyContainer = document.getElementById("history-container");
+                historyContainer.innerHTML = ""; // コンテナをクリア
+
+                if (Array.isArray(result) && result.length > 0) {
+                    result.forEach((record, index) => {
+                        // 各履歴のHTML構造
+                        const recordDiv = document.createElement("div");
+                        recordDiv.innerHTML = `
+                            <h3 id="type">${record.type}</h3>
+                            <p id="message">${record.message}</p>
+                            <p id="timehistory">${record.timestamp}</p>
+                            <h3 id="historytag">${record.historyTag || "なし"}</h3>
+                            <h3 id="recordid">${record.recordID}</h3>
+                            <h3 id="parameter">${record.parameter || "なし"}</h3>
+                        `;
+
+                        historyContainer.appendChild(recordDiv); // 履歴データを追加
+
+                        // // 履歴間に区切り線を挿入
+                        // if (index < result.length - 1) {
+                        //     const divider = document.createElement("div");
+                        //     divider.innerHTML = `<p>ーーーーーーーーーーーーーーーーーー</p>`;
+                        //     historyContainer.appendChild(divider);
+                        // }
+                    });
+
+                    // 最後に更新時間を表示
+                    const nowhis = new Date();
+                    const updateElement = document.createElement("p");
+                    updateElement.id = "update-his";
+                    updateElement.innerText = `${nowhis.toLocaleString()}`;
+                    historyContainer.appendChild(updateElement);
+                } else {
+                    historyContainer.innerHTML = "<p>履歴がありません</p>";
+                }
+            } catch (error) {
+                const historyContainer = document.getElementById("history-container");
+                historyContainer.innerHTML = `<p>エラー: ${error.message}</p>`;
+            }
+        }
+        
+        window.onload = function () {
+            fetchStatus(); // 初回のステータス取得
+            fetchHistory();
+        };
+    </script>
+</head>
+<body>
+    <h1>Sesame Control</h1>
+    <button onclick="controlDoor('lock')">１号施錠</button>
+    <!-- <button onclick="controlDoor('unlock')">１号解錠</button> -->
+
+    <button onclick="controlDoor('lock')">２号施錠</button>
+    <!-- <button onclick="controlDoor('unlock')">２号解錠</button> -->
+
+
+    <h1>ドアのステータス</h1>
+    <button onclick="fetchStatus()">１号ステータスを確認</button>
+    <!-- <button onclick="fetchStatus()">２号ステータスを確認</button> -->
+    <h3 id="battery">バッテリーをここに表示</h3>
+    <h3 id="angle">角度をここに表示</h3>
+    <h3 id="status">状態をここに表示</h3>
+    <h3 id="timestamp">開閉時間をここに表示</h3>
+    <p id="update-time"></p>
+
+    <h1>履歴を確認</h1>
+    <button onclick="fetchHistory()">１号履歴を取得</button>
+    <!-- <button onclick="fetchHistory()">２号履歴を取得</button> -->
+    <div id="history-container">
+        <h3 id="type">タイプをここに表示</h3>
+        <p id="message">メッセージをここに表示</p> <!-- メッセージ用の要素 -->
+        <p id="timehistory">時間をここに表示</p>
+        <h3 id="historytag">タグ・メモをここに表示</h3>
+        <h3 id="recordid">履歴番号をここに表示</h3>
+        <h3 id="parameter">パラメータをここに表示</h3>
+        <p id="update-his"></p>
+    </div>
+</body>
+</html>
+
+   

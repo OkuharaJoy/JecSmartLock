@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="css/user.css">
+    <title>userControl</title>
+    <script src="js/script.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+    <script src="js/userControl.js"></script>
+</head>
+<body>
+    <header>
+        <h1>JEC SMART LOCK</h1>
+    </header>
+    <img src="img/日本電子.png" alt="メニュー" class="menu-icon" id="menuIcon">
+    <div class="sidebar">
+        <ul>
+            <li><a href="#"><img src="img/日本電子.png" alt="ホーム" class="icon"></a></li>
+            <li><a href="../2_部屋管理Page/room.html">ホーム</a></li>
+            <li><a href="../3_ユーザー管理/user.html">ユーザー管理</a></li>
+            <li><a href="../3_部屋編集Page/room_edit.html">部屋編集</a></li>
+            <li><a href="../1_ログイン/login.html">ログアウト</a></li>
+        </ul>
+    </div>
+
+    <main>
+        <div class="content">
+            <div class="container">
+                <h2>ユーザー管理</h2>
+                <!-- ユーザー検索ボックス -->
+                <div class="tag">
+                    <input type="text" id="searchQuery" class="search-box" placeholder="メールアドレスまたは名前、教室番号を入力してください">
+                    <!-- ユーザー登録 -->
+                    <div id="overlay" onclick="closeCreateUser()"></div>
+                    <p class="open-create_user" onclick="openCreateUser('create_user1')"><span>新規ユーザー作成</span></p>
+                    <div class="create_user" id="create_user1" style="display:none;">
+                        <div class="model_title" id="model_lavel">
+                            <form>
+                                <label for="role">管理権限:</label>
+                                <select id="role" name="role" required onchange="updateFormFields()">
+                                    <option value="1">管理者</option>
+                                    <option value="2">教員</option>
+                                    <option value="3">学生</option>
+                                </select>
+
+                                <!-- 名前 -->
+                                <label for="name">名前:</label>
+                                <input type="text" id="name" name="name" required>
+                                <!-- メール -->
+                                <label for="email">メールアドレス:</label>
+                                <input type="email" id="mail" name="email" required>
+
+                                <!-- パスワード -->
+                                <label for="password">パスワード:</label>
+                                <input type="password" id="password" name="password" required>
+
+                                <!-- パスワード確認用 -->
+                                <label for="password-confirm">パスワード（確認用）:</label>
+                                <input type="password" id="password-confirm" name="password-confirm" required>
+
+                                <!-- 管理者用 -->
+                                <div id="admin-fields" class="role-fields" style="display: none;">
+                                    <label for="phone">携帯番号:</label>
+                                    <input type="tel" id="tel" name="phone" required>
+                                </div>
+
+                                <!-- 教員用 -->
+                                <div id="teacher-fields" class="role-fields" style="display: none;">
+                                    <label for="phone">携帯番号:</label>
+                                    <input type="tel" id="tel" name="phone" required>
+
+                                    <label for="manage-room-number">号室(教室の代表管理者のみ入力):</label>
+                                    <input type="text" id="manage-room-number" name="manage-room-number">
+                                </div>
+
+                                <!-- 学生用 -->
+                                <div id="student-fields" class="role-fields" style="display: none;">
+                                    <label for="email">メールアドレス:</label>
+                                    <input type="email" id="mail" name="email" required>
+
+                                    <label for="open-room-number">施錠号室を指定 (必須):</label>
+                                    <input type="text" id="open-room-number" name="open-room-number" required>
+                                </div>
+
+                                <div class="button-container">
+                                    <button id="register" type="button">登録</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                <!-- ユーザー情報編集 -->
+                <div id="edit-overlay" onclick="closeEditUser()" style="display: none; opacity: 0;"></div>
+                <div class="edit_user" id="edit_user1" style="display: none; opacity: 0;">
+                    <form>
+                        <h3>情報編集</h3>
+                        <label for="edit-name">名前:</label>
+                        <input type="text" id="edit-name" name="edit-name" required>
+
+                        <label for="edit-password">パスワード:</label>
+                        <input type="password" id="edit-password" name="edit-password" required>
+
+                        <label for="edit-password-confirm">パスワード（確認用）:</label>
+                        <input type="password" id="edit-password-confirm" name="edit-password-confirm" required>
+
+                        <label for="edit-role">管理権限:</label>
+                        <select id="edit-role" name="edit-role" required onchange="toggleClassroomNumber()">
+                            <option value="admin">管理者</option>
+                            <option value="user">教員</option>
+                            <option value="student">学生</option>
+                        </select>
+
+                        <!-- 教室番号フィールド (管理者と教員用) -->
+                        <div id="classroom-number-field" style="display: none;">
+                            <label for="classroom-number">教室番号:</label>
+                            <input type="text" id="classroom-number" name="classroom-number">
+                        </div>
+
+                        <label for="edit-email">メールアドレス:</label>
+                        <input type="email" id="edit-email" name="edit-email" required>
+
+                        <label for="edit-phone">携帯番号:</label>
+                        <input type="tel" id="edit-phone" name="edit-phone" required>
+
+                        <div class="button-container">
+                            <button type="button" onclick="closeEditUser()">閉じる</button>
+                            <button type="submit">ユーザー削除</button>
+                            <button type="submit">更新</button>
+                        </div>
+                    </form>
+                </div>
+                <div id="result">
+                    <p>ここに結果を出す</p>
+                </div>
+                <div class="user--container-wrapper">
+                    <table class="user-container">
+                        <thead>
+                            <tr>
+                                <th>メールアドレス</th>
+                                <th>名前</th>
+                                <th>管理権限</th>
+                                <th>教室</th>
+                                <th>社用携帯番号</th>
+                                <th>編集</th>
+                            </tr>
+                        </thead>
+                        <tbody id="userTableBody">
+                            <tr>
+                                <td>ichiro.suzuki@example.com</td>
+                                <td>鈴木 一郎</td>
+                                <td class="admin">管理者</td>
+                                <td>151教室</td>
+                                <td>111-2222-3333</td>
+                                <td><button class="open-edit_user" onclick="openEditUser('edit_user1')"><span>編集</span></button></td>
+                            </tr>
+                            <tr>
+                                <td>jiro.sato@example.com</td>
+                                <td>佐藤 二郎</td>
+                                <td>外部講師</td>
+                                <td>153教室</td>
+                                <td>222-3333-4444</td>
+                                <td><button class="open-edit_user" onclick="openEditUser('edit_user1')"><span>編集</span></button></td>
+                            </tr>
+                            <tr>
+                                <td>saburo.takahashi@example.com</td>
+                                <td>高橋 三郎</td>
+                                <td>ユーザー</td>
+                                <td>161教室</td>
+                                <td>333-4444-5555</td>
+                                <td><button class="open-edit_user" onclick="openEditUser('edit_user1')"><span>編集</span></button></td>
+                            </tr>
+                            <tr>
+                                <td>shiro.tanaka@example.com</td>
+                                <td>田中 四郎</td>
+                                <td>ユーザー</td>
+                                <td>181教室</td>
+                                <td>444-5555-6666</td>
+                                <td><button class="open-edit_user" onclick="openEditUser('edit_user1')"><span>編集</span></button></td>
+                            </tr>
+                            <tr>
+                                <td>goro.nakamura@example.com</td>
+                                <td>中村 五郎</td>
+                                <td>ユーザー</td>
+                                <td>182教室</td>
+                                <td>555-6666-7777</td>
+                                <td><button class="open-edit_user" onclick="openEditUser('edit_user1')"><span>編集</span></button></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </main>
+</body>
+</html>
